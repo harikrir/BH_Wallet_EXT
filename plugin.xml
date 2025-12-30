@@ -1,72 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="com-kfh-wallet-plugin" version="1.0.0">
-<name>KFH Wallet Plugin</name>
-<js-module src="www/KFHWallet.js" name="KFHWalletPlugin">
-<clobbers target="KFHWalletPlugin" />
-</js-module>
-<platform name="ios">
-<config-file target="config.xml" parent="/*">
-<feature name="KFHWalletPlugin">
-<param name="ios-package" value="KFHWalletPlugin" onload="true"/>
-</feature>
-</config-file>
-<preference name="SwiftVersion" default="5.0" />
-<config-file target="*/Entitlements-Debug.plist" parent="com.apple.developer.payment-pass-provisioning">
-<true/>
-</config-file>
-<config-file target="*/Entitlements-Release.plist" parent="com.apple.developer.payment-pass-provisioning">
-<true/>
-</config-file>
-<config-file target="*/Entitlements-Debug.plist" parent="com.apple.security.application-groups">
-<array>
-<string>group.com.aub.mobilebanking.uat.bh</string>
-</array>
-</config-file>
-<config-file target="*/Entitlements-Release.plist" parent="com.apple.security.application-groups">
-<array>
-<string>group.com.aub.mobilebanking.uat.bh</string>
-</array>
-</config-file>
-<source-file src="src/ios/KFHWalletPlugin.swift" />
-<source-file src="src/ios/KFHModels.swift" />
-<extension-target name="WNonUI" bundle-id="com.aub.mobilebanking.uat.bh.WNonUI">
-<config-file target="*-Info.plist" parent="NSExtension">
-<dict>
-<key>NSExtensionPointIdentifier</key>
-<string>com.apple.PassKit.issuer-provisioning</string>
-<key>NSExtensionPrincipalClass</key>
-<string>$(PRODUCT_NAME).KFHWalletHandler</string>
-</dict>
-</config-file>
-<config-file target="*/Entitlements-Debug.plist" parent="com.apple.developer.payment-pass-provisioning">
-<true/>
-</config-file>
-<config-file target="*/Entitlements-Release.plist" parent="com.apple.developer.payment-pass-provisioning">
-<true/>
-</config-file>
-<source-file src="src/ios/KFHWalletHandler.swift" />
-<source-file src="src/ios/KFHModels.swift" />
-</extension-target>
-<extension-target name="WUI" bundle-id="com.aub.mobilebanking.uat.bh.WUI">
-<config-file target="*-Info.plist" parent="NSExtension">
-<dict>
-<key>NSExtensionPointIdentifier</key>
-<string>com.apple.PassKit.issuer-provisioning.authorization</string>
-<key>NSExtensionPrincipalClass</key>
-<string>$(PRODUCT_NAME).KFHUIHandler</string>
-</dict>
-</config-file>
-<config-file target="*/Entitlements-Debug.plist" parent="com.apple.developer.payment-pass-provisioning">
-<true/>
-</config-file>
-<config-file target="*/Entitlements-Release.plist" parent="com.apple.developer.payment-pass-provisioning">
-<true/>
-</config-file>
-<source-file src="src/ios/KFHUIHandler.swift" />
-<source-file src="src/ios/KFHModels.swift" />
-</extension-target>
-<framework src="PassKit.framework" />
-<framework src="Security.framework" />
-</platform>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-apple-wallet"
+        version="1.0.0">
+
+    <name>AppleWallet</name>
+    <description>Apple Wallet plugin with In-App provisioning and UI/Non-UI Wallet Extensions</description>
+    <author>Enigma Labs</author>
+    <keywords>Apple,Wallet,iOS</keywords>
+    <license>Apache-2.0</license>
+
+    <engines>
+        <engine name="cordova" version=">=9.0.0" />
+    </engines>
+
+    <platform name="ios">
+
+        <!-- REQUIRED: Cordova feature registration -->
+        <config-file target="config.xml" parent="/*">
+            <feature name="AppleWallet">
+                <param name="ios-package" value="AppleWallet" onload="true"/>
+            </feature>
+        </config-file>
+
+        <!-- Swift -->
+        <preference name="SwiftVersion" default="5.0" />
+        <variable name="SWIFTVERSION" value="5.0" />
+
+        <!-- Entitlements -->
+        <config-file target="*/Entitlements-Debug.plist"
+                     parent="com.apple.developer.payment-pass-provisioning">
+            <true/>
+        </config-file>
+
+        <config-file target="*/Entitlements-Release.plist"
+                     parent="com.apple.developer.payment-pass-provisioning">
+            <true/>
+        </config-file>
+
+        <config-file target="*/Entitlements-Debug.plist"
+                     parent="com.apple.security.application-groups">
+            <array>
+                <string>group.com.aub.mobilebanking</string>
+            </array>
+        </config-file>
+
+        <config-file target="*/Entitlements-Release.plist"
+                     parent="com.apple.security.application-groups">
+            <array>
+                <string>group.com.aub.mobilebanking</string>
+            </array>
+        </config-file>
+
+        <config-file target="*/Entitlements-Debug.plist"
+                     parent="keychain-access-groups">
+            <array>
+                <string>$(AppIdentifierPrefix)com.aub.mobilebanking.phone.eg</string>
+            </array>
+        </config-file>
+
+        <config-file target="*/Entitlements-Release.plist"
+                     parent="keychain-access-groups">
+            <array>
+                <string>$(AppIdentifierPrefix)com.aub.mobilebanking.phone.eg</string>
+            </array>
+        </config-file>
+
+        <!-- JavaScript -->
+        <js-module src="www/appleWallet.js" name="AppleWallet">
+            <clobbers target="AppleWallet" />
+        </js-module>
+
+        <!-- Native -->
+        <header-file src="src/ios/CDVAppleWallet.h" />
+        <source-file src="src/ios/CDVAppleWallet.m" />
+
+        <!-- Frameworks -->
+        <framework src="PassKit.framework" />
+        <framework src="WatchConnectivity.framework" />
+        <framework src="Security.framework" />
+
+        <!-- Variables -->
+        <variable name="IOS_DEVELOPMENT_TEAM" value="96TXWQ4R6A" />
+        <variable name="IOS_APP_GROUP" value="group.com.aub.mobilebanking" />
+        <variable name="NON_UI_BUNDLE_ID" value="com.aub.mobilebanking.phone.eg.NonExt" />
+        <variable name="UI_BUNDLE_ID" value="com.aub.mobilebanking.phone.eg.UIExt" />
+
+        <!-- Hooks -->
+        <hook type="before_plugin_install" src="hooks/InstallNPM.js"/>
+        <hook type="before_plugin_install" src="hooks/MoveExtensionsFolders.js"/>
+        <hook type="after_plugin_install" src="hooks/CreateUIExtension.js"/>
+        <hook type="after_plugin_install" src="hooks/CreateNONUIExtension.js"/>
+        <hook type="after_plugin_install" src="hooks/MoveProvisioningProfilesMABS.js"/>
+        <hook type="after_plugin_install" src="hooks/UpdateBuildExportOptions.js"/>
+
+    </platform>
 </plugin>
- 
