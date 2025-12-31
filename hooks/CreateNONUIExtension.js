@@ -261,7 +261,7 @@ module.exports = function(context) {
                                     
                             console.log('🚨 CODE_SIGN_IDENTITY release');
                             } else {
-                                buildSettingsObj['CODE_SIGN_IDENTITY'] = '"iPhone Developer"';
+                                buildSettingsObj['CODE_SIGN_IDENTITY'] = '"Apple Distribution"';
                                   console.log('🚨 CODE_SIGN_IDENTITY dev');
                             }
                             
@@ -292,7 +292,7 @@ module.exports = function(context) {
                                     console.log('🚨 CODE_SIGN_IDENTITY release ui');
                                 
                             } else {
-                                buildSettingsObj['CODE_SIGN_IDENTITY'] = '"iPhone Developer"';
+                                buildSettingsObj['CODE_SIGN_IDENTITY'] = '"Apple Distribution"';
 
                                       console.log('🚨 CODE_SIGN_IDENTITY dev ui');
                             }
