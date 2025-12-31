@@ -316,45 +316,56 @@ module.exports = function(context) {
 
        // --- Start of Capability Fix ---
 
- // --- The Final "Search & Apply" Fix ---
-var allObjects = pbxProject.hash.project.objects;
+// --- OutSystems MABS Specific Fix ---
 var targetNames = ['WalletExtension', 'WalletExtensionUI'];
-// 1. Find the PBXProject section
-for (var key in allObjects) {
-   if (allObjects[key].isa === 'PBXProject') {
-       console.log('✅ Found PBXProject section: ' + key);
-       var projectAttributes = allObjects[key].attributes;
-       if (!projectAttributes) {
-           allObjects[key].attributes = {};
-           projectAttributes = allObjects[key].attributes;
+// 1. In MABS, the objects are usually directly under pbxProject.hash.project.objects
+// but we will check for the pbxProject.objects fallback as well.
+var allObjects = pbxProject.objects || (pbxProject.hash && pbxProject.hash.project && pbxProject.hash.project.objects);
+if (allObjects) {
+   console.log('🚨 MABS: Found objects dictionary');
+   // 2. Find the PBXProject section by looking for the isa
+   var projectSectionKey = null;
+   for (var key in allObjects) {
+       if (allObjects[key].isa === 'PBXProject') {
+           projectSectionKey = key;
+           break;
        }
-       if (!projectAttributes.TargetAttributes) {
-           projectAttributes.TargetAttributes = {};
+   }
+   if (projectSectionKey) {
+       console.log('🚨 MABS: Found PBXProject section');
+       var projectEntry = allObjects[projectSectionKey];
+       // Ensure attributes exist
+       if (!projectEntry.attributes) { projectEntry.attributes = {}; }
+       // Ensure TargetAttributes exist
+       if (!projectEntry.attributes.TargetAttributes) {
+           projectEntry.attributes.TargetAttributes = {};
        }
-       // 2. Map the capability to our targets
        targetNames.forEach(function(name) {
            var targetKey = pbxProject.findTargetKey(name);
            if (targetKey) {
-               if (!projectAttributes.TargetAttributes[targetKey]) {
-                   projectAttributes.TargetAttributes[targetKey] = {};
-               }
-               // Add the specific "App Groups" Switch
-               projectAttributes.TargetAttributes[targetKey]['DevelopmentTeam'] = BANKTeamID;
-               if (!projectAttributes.TargetAttributes[targetKey]['SystemCapabilities']) {
-                   projectAttributes.TargetAttributes[targetKey]['SystemCapabilities'] = {};
-               }
-               projectAttributes.TargetAttributes[targetKey]['SystemCapabilities']["com.apple.ApplicationGroups"] = {
-                   enabled: 1
+               // Apply the Distribution-required SystemCapabilities
+               projectEntry.attributes.TargetAttributes[targetKey] = {
+                   DevelopmentTeam: BANKTeamID,
+                   SystemCapabilities: {
+                       "com.apple.ApplicationGroups": {
+                           enabled: 1
+                       }
+                   }
                };
-               console.log('🚀 Distribution Fix: App Groups forced for ' + name);
+               console.log('🚨 MABS: Force-Enabled App Groups for ' + name);
            } else {
-               console.log('⚠️ Could not find target key for: ' + name);
+               console.log('🚨 MABS: Could not find key for ' + name);
            }
        });
-       break;
+   } else {
+       console.log('🚨 MABS: PBXProject section not found in objects');
    }
+} else {
+   console.log('🚨 MABS: Could not find any objects in pbxProject');
 }
 // --- End of Capability Fix ---
+
+        
 
         fs.writeFileSync(pbxProjectPath, pbxProject.writeSync());
         console.log('🚨 Create NONUI Extension Added WalletExtension to XCode project');
