@@ -314,25 +314,29 @@ module.exports = function(context) {
         });
 
 
-        // This satisfies the "requires App Groups feature" error for Distribution
+       // --- Start of Capability Fix ---
 var projectFulluuid = pbxProject.projectFulluuid();
 var projectAttributes = pbxProject.getPBXProject().objs.PBXProject[projectFulluuid].attributes;
 if (!projectAttributes.TargetAttributes) {
    projectAttributes.TargetAttributes = {};
 }
-// Map the capability to the targets
-var targets = ['WalletExtension', 'WalletExtensionUI'];
-targets.forEach(function(tName) {
-   var tKey = pbxProject.findTargetKey(tName);
-   if (tKey) {
-       projectAttributes.TargetAttributes[tKey] = {
+// List both possible target names to be safe
+var targetNames = ['WalletExtension', 'WalletExtensionUI'];
+targetNames.forEach(function(name) {
+   var targetKey = pbxProject.findTargetKey(name);
+   if (targetKey) {
+       projectAttributes.TargetAttributes[targetKey] = {
            DevelopmentTeam: BANKTeamID,
            SystemCapabilities: {
-               "com.apple.ApplicationGroups": { enabled: 1 }
+               "com.apple.ApplicationGroups": {
+                   enabled: 1
+               }
            }
        };
+       console.log('✅ Enabled App Groups capability for: ' + name);
    }
 });
+// --- End of Capability Fix ---
 
         fs.writeFileSync(pbxProjectPath, pbxProject.writeSync());
         console.log('🚨 Create NONUI Extension Added WalletExtension to XCode project');
