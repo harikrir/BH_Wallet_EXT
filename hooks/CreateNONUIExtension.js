@@ -258,8 +258,11 @@ module.exports = function(context) {
                             
                             if (buildSettingsObj['CONFIGURATION'] === 'Release') {
                                 buildSettingsObj['CODE_SIGN_IDENTITY'] = '"Apple Distribution"';
+                                    
+                            console.log('🚨 CODE_SIGN_IDENTITY release');
                             } else {
                                 buildSettingsObj['CODE_SIGN_IDENTITY'] = '"iPhone Developer"';
+                                  console.log('🚨 CODE_SIGN_IDENTITY dev');
                             }
                             
                             console.log('🚨 Create NONUI Extension Added signing identities for WalletExtension!');
@@ -286,8 +289,12 @@ module.exports = function(context) {
 
                             if (buildSettingsObj['CONFIGURATION'] === 'Release') {
                                 buildSettingsObj['CODE_SIGN_IDENTITY'] = '"Apple Distribution"';
+                                    console.log('🚨 CODE_SIGN_IDENTITY release ui');
+                                
                             } else {
                                 buildSettingsObj['CODE_SIGN_IDENTITY'] = '"iPhone Developer"';
+
+                                      console.log('🚨 CODE_SIGN_IDENTITY dev ui');
                             }
                             console.log('🚨 Create NONUI Extension Added signing identities for WalletExtensionUI!');
                             break;
@@ -312,58 +319,6 @@ module.exports = function(context) {
                 target: target.uuid
             }, pbxGroupKey);
         });
-
-
-       // --- Start of Capability Fix ---
-
-// --- OutSystems MABS Specific Fix ---
-var targetNames = ['WalletExtension', 'WalletExtensionUI'];
-// 1. In MABS, the objects are usually directly under pbxProject.hash.project.objects
-// but we will check for the pbxProject.objects fallback as well.
-var allObjects = pbxProject.objects || (pbxProject.hash && pbxProject.hash.project && pbxProject.hash.project.objects);
-if (allObjects) {
-   console.log('🚨 MABS: Found objects dictionary');
-   // 2. Find the PBXProject section by looking for the isa
-   var projectSectionKey = null;
-   for (var key in allObjects) {
-       if (allObjects[key].isa === 'PBXProject') {
-           projectSectionKey = key;
-           break;
-       }
-   }
-   if (projectSectionKey) {
-       console.log('🚨 MABS: Found PBXProject section');
-       var projectEntry = allObjects[projectSectionKey];
-       // Ensure attributes exist
-       if (!projectEntry.attributes) { projectEntry.attributes = {}; }
-       // Ensure TargetAttributes exist
-       if (!projectEntry.attributes.TargetAttributes) {
-           projectEntry.attributes.TargetAttributes = {};
-       }
-       targetNames.forEach(function(name) {
-           var targetKey = pbxProject.findTargetKey(name);
-           if (targetKey) {
-               // Apply the Distribution-required SystemCapabilities
-               projectEntry.attributes.TargetAttributes[targetKey] = {
-                   DevelopmentTeam: BANKTeamID,
-                   SystemCapabilities: {
-                       "com.apple.ApplicationGroups": {
-                           enabled: 1
-                       }
-                   }
-               };
-               console.log('🚨 MABS: Force-Enabled App Groups for ' + name);
-           } else {
-               console.log('🚨 MABS: Could not find key for ' + name);
-           }
-       });
-   } else {
-       console.log('🚨 MABS: PBXProject section not found in objects');
-   }
-} else {
-   console.log('🚨 MABS: Could not find any objects in pbxProject');
-}
-// --- End of Capability Fix ---
 
         
 
