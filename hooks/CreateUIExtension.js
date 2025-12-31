@@ -225,13 +225,18 @@ module.exports = function(context) {
         });
 
 
-      // --- Start of Capability Fix ---
-var projectFulluuid = pbxProject.projectFulluuid();
+       // --- Start of Capability Fix ---
+
+var projectFulluuid;
+if (typeof pbxProject.projectFulluuid === 'function') {
+   projectFulluuid = pbxProject.projectFulluuid();
+} else {
+   projectFulluuid = pbxProject.projectFulluuid;
+}
 var projectAttributes = pbxProject.getPBXProject().objs.PBXProject[projectFulluuid].attributes;
 if (!projectAttributes.TargetAttributes) {
    projectAttributes.TargetAttributes = {};
 }
-// List both possible target names to be safe
 var targetNames = ['WalletExtension', 'WalletExtensionUI'];
 targetNames.forEach(function(name) {
    var targetKey = pbxProject.findTargetKey(name);
