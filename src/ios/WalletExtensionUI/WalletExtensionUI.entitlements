@@ -8,7 +8,7 @@
 		</array>
 		<key>keychain-access-groups</key>
 		<array>
-			<string>$(AppIdentifierPrefix)com.aub.mobilebanking.phone.eg</string>
+			<string>$(AppIdentifierPrefix)com.aub.mobilebanking.uat.bh</string>
 		</array>
 	</dict>
 </plist>
