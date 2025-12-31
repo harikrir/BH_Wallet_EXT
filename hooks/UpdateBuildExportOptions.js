@@ -8,13 +8,13 @@ module.exports = function (context) {
     console.log(`📝 Project Root: ${projectRoot}`);
     console.log(`📝 Path to build.js: ${buildJsPath}`);
 
-    const mainAppBundleID = "com.aub.mobilebanking.phone.eg";
-    const uiExtnBundleID = "com.aub.mobilebanking.phone.eg.UIExt";
-    const nonuiExtnBundleID = "com.aub.mobilebanking.phone.eg.NonExt";
+    const mainAppBundleID = "com.aub.mobilebanking.uat.bh";
+    const uiExtnBundleID = "com.aub.mobilebanking.uat.bh.WUI";
+    const nonuiExtnBundleID = "com.aub.mobilebanking.uat.bh.WNonUI";
 
-    const mainApp_PProfile = "2b9cdfa5-4472-49bf-9a68-7c04c76090c6";
-    const uiExtn_PProfile = "94c8d471-940b-42b7-8d64-f071402c8b61";
-    const nonuiExtn_PProfile = "b791a518-f133-46e9-86ae-799b54368345";
+    const mainApp_PProfile = "1935f949-c72a-49f3-bc93-53d7df814805";
+    const uiExtn_PProfile = "ef234420-f58f-41e4-871a-86527fe5acfd";
+    const nonuiExtn_PProfile = "2458aa6f-941b-43c4-b787-b1d304a7b73c";
 
     console.log(`📝 mainAppBundleID: ${mainAppBundleID}, mainApp_PProfile: ${mainApp_PProfile}`);
     console.log(`📝 uiExtnBundleID: ${uiExtnBundleID}, uiExtn_PProfile: ${uiExtn_PProfile}`);
