@@ -285,7 +285,7 @@ module.exports = function(context) {
                             buildSettingsObj['CODE_SIGN_STYLE'] = 'Manual';
 
                             if (buildSettingsObj['CONFIGURATION'] === 'Release') {
-                                buildSettingsObj['CODE_SIGN_IDENTITY'] = '"iPhone Distribution"';
+                                buildSettingsObj['CODE_SIGN_IDENTITY'] = '"Apple Distribution"';
                             } else {
                                 buildSettingsObj['CODE_SIGN_IDENTITY'] = '"iPhone Developer"';
                             }
