@@ -316,31 +316,36 @@ module.exports = function(context) {
 
        // --- Start of Capability Fix ---
 
-var projectFulluuid;
-if (typeof pbxProject.projectFulluuid === 'function') {
-   projectFulluuid = pbxProject.projectFulluuid();
-} else {
-   projectFulluuid = pbxProject.projectFulluuid;
-}
-var projectAttributes = pbxProject.getPBXProject().objs.PBXProject[projectFulluuid].attributes;
-if (!projectAttributes.TargetAttributes) {
-   projectAttributes.TargetAttributes = {};
-}
-var targetNames = ['WalletExtension', 'WalletExtensionUI'];
-targetNames.forEach(function(name) {
-   var targetKey = pbxProject.findTargetKey(name);
-   if (targetKey) {
-       projectAttributes.TargetAttributes[targetKey] = {
-           DevelopmentTeam: BANKTeamID,
-           SystemCapabilities: {
-               "com.apple.ApplicationGroups": {
-                   enabled: 1
+       var projectFulluuid;
+       if (typeof pbxProject.projectFulluuid === 'function') {
+           projectFulluuid = pbxProject.projectFulluuid();
+       } else {
+           projectFulluuid = pbxProject.projectFulluuid;
+       }
+       // Access the raw hash directly to avoid "not a function" errors
+       var allObjects = pbxProject.hash.project.objects;
+       var projectSection = allObjects['PBXProject'];
+       var projectAttributes = projectSection[projectFulluuid].attributes;
+       if (!projectAttributes.TargetAttributes) {
+           projectAttributes.TargetAttributes = {};
+       }
+       var targetNames = ['WalletExtension', 'WalletExtensionUI'];
+       targetNames.forEach(function(name) {
+           var targetKey = pbxProject.findTargetKey(name);
+           if (targetKey) {
+               if (!projectAttributes.TargetAttributes[targetKey]) {
+                   projectAttributes.TargetAttributes[targetKey] = {};
                }
+               projectAttributes.TargetAttributes[targetKey]['DevelopmentTeam'] = BANKTeamID;
+               if (!projectAttributes.TargetAttributes[targetKey]['SystemCapabilities']) {
+                   projectAttributes.TargetAttributes[targetKey]['SystemCapabilities'] = {};
+               }
+               projectAttributes.TargetAttributes[targetKey]['SystemCapabilities']["com.apple.ApplicationGroups"] = {
+                   enabled: 1
+               };
+               console.log('✅ Success: App Group capability enabled for ' + name);
            }
-       };
-       console.log('✅ Enabled App Groups capability for: ' + name);
-   }
-});
+       });
 // --- End of Capability Fix ---
 
         fs.writeFileSync(pbxProjectPath, pbxProject.writeSync());
