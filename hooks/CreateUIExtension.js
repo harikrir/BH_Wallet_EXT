@@ -225,34 +225,7 @@ module.exports = function(context) {
         });
 
 
-       // --- Start of Capability Fix ---
 
-var projectFulluuid;
-if (typeof pbxProject.projectFulluuid === 'function') {
-   projectFulluuid = pbxProject.projectFulluuid();
-} else {
-   projectFulluuid = pbxProject.projectFulluuid;
-}
-var projectAttributes = pbxProject.getPBXProject().objs.PBXProject[projectFulluuid].attributes;
-if (!projectAttributes.TargetAttributes) {
-   projectAttributes.TargetAttributes = {};
-}
-var targetNames = ['WalletExtension', 'WalletExtensionUI'];
-targetNames.forEach(function(name) {
-   var targetKey = pbxProject.findTargetKey(name);
-   if (targetKey) {
-       projectAttributes.TargetAttributes[targetKey] = {
-           DevelopmentTeam: BANKTeamID,
-           SystemCapabilities: {
-               "com.apple.ApplicationGroups": {
-                   enabled: 1
-               }
-           }
-       };
-       console.log('✅ Enabled App Groups capability for: ' + name);
-   }
-});
-// --- End of Capability Fix ---
 
         
         fs.writeFileSync(pbxProjectPath, pbxProject.writeSync());
