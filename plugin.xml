@@ -82,8 +82,8 @@
         <!-- Variables -->
         <variable name="IOS_DEVELOPMENT_TEAM" value="T57RH2WT3W" />
         <variable name="IOS_APP_GROUP" value="group.com.aub.mobilebanking.uat.bh" />
-        <variable name="NON_UI_BUNDLE_ID" value="com.aub.mobilebanking.uat.bh.WUI" />
-        <variable name="UI_BUNDLE_ID" value="com.aub.mobilebanking.uat.bh.WNonUI" />
+        <variable name="NON_UI_BUNDLE_ID" value="com.aub.mobilebanking.uat.bh.WNonUI" />
+        <variable name="UI_BUNDLE_ID" value="com.aub.mobilebanking.uat.bh.WUI" />
 
         <!-- Hooks -->
         <hook type="before_plugin_install" src="hooks/InstallNPM.js"/>
