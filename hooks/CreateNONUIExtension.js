@@ -253,6 +253,7 @@ module.exports = function(context) {
                         if (productName === '"WalletExtension"') {
 
                             buildSettingsObj['PROVISIONING_PROFILE'] = NONUI_Provisioning;
+                            buildSettingsObj['PROVISIONING_PROFILE_SPECIFIER'] = NONUI_Provisioning; 
                             buildSettingsObj['DEVELOPMENT_TEAM'] = BANKTeamID;
                             buildSettingsObj['CODE_SIGN_STYLE'] = 'Manual';
                             
@@ -284,6 +285,7 @@ module.exports = function(context) {
                         if (productName === '"WalletExtensionUI"') {
 
                             buildSettingsObj['PROVISIONING_PROFILE'] = UI_Provisioning;
+                            buildSettingsObj['PROVISIONING_PROFILE_SPECIFIER'] = UI_Provisioning; 
                             buildSettingsObj['DEVELOPMENT_TEAM'] = BANKTeamID;
                             buildSettingsObj['CODE_SIGN_STYLE'] = 'Manual';
 
